@@ -2,20 +2,17 @@ package oth
 
 import "testing"
 
-func TestGetIp(t *testing.T) {
+func TestCopy(t *testing.T) {
 	tests := []struct {
 		name string
 	}{
 		{
-			name: "1",
+			name: "one",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			ip, err := GetIP()
-			if err == nil {
-				t.Log(ip)
-			}
+			Copy()
 		})
 	}
 }
