@@ -1,17 +1,18 @@
-package tool
+package gox
 
 import (
 	"flag"
 	"fmt"
-	"github.com/natefinch/lumberjack"
-	"github.com/sirupsen/logrus"
-	"github.com/spf13/viper"
 	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/natefinch/lumberjack"
+	"github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
 )
 
 const (

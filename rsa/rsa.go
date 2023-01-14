@@ -9,9 +9,9 @@ import (
 	"os"
 )
 
-//GenRsaKey
-//openssl genrsa -out private.pem 2048
-//openssl rsa -in private.pem -pubout -out public.pem
+// GenRsaKey
+// openssl genrsa -out private.pem 2048
+// openssl rsa -in private.pem -pubout -out public.pem
 func GenRsaKey(bit int) error {
 	//private
 	privateKey, err := rsa.GenerateKey(rand.Reader, bit)

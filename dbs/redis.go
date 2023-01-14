@@ -1,11 +1,12 @@
 package dbs
 
 import (
-	"github.com/itooling/gox/tool"
 	"fmt"
-	"github.com/go-redis/redis"
 	"strings"
 	"time"
+
+	"github.com/go-redis/redis"
+	"github.com/itooling/gox"
 )
 
 var rc redis.Cmdable
@@ -23,9 +24,9 @@ func Redis() redis.Cmdable {
 	}()
 
 	options := redis.Options{
-		Addr:         tool.String("db.redis.addr"),
-		Password:     tool.String("db.redis.pass"),
-		DB:           tool.Int("db.redis.index"),
+		Addr:         gox.String("db.redis.addr"),
+		Password:     gox.String("db.redis.pass"),
+		DB:           gox.Int("db.redis.index"),
 		DialTimeout:  time.Millisecond * 50,
 		ReadTimeout:  time.Millisecond * 50,
 		WriteTimeout: time.Millisecond * 50,
@@ -48,8 +49,8 @@ func RedisCluster() redis.Cmdable {
 	}()
 
 	options := redis.ClusterOptions{
-		Addrs:        strings.Split(tool.String("db.redis.nodes"), ","),
-		Password:     tool.String("db.redis.nodes_pass"),
+		Addrs:        strings.Split(gox.String("db.redis.nodes"), ","),
+		Password:     gox.String("db.redis.nodes_pass"),
 		DialTimeout:  time.Millisecond * 50,
 		ReadTimeout:  time.Millisecond * 50,
 		WriteTimeout: time.Millisecond * 50,

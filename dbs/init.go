@@ -1,13 +1,14 @@
 package dbs
 
 import (
-	"github.com/itooling/gox/tool"
-	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
-	"gorm.io/gorm/schema"
 	"log"
 	"os"
 	"time"
+
+	"github.com/itooling/gox"
+	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
+	"gorm.io/gorm/schema"
 )
 
 var (
@@ -34,13 +35,13 @@ type Connection struct {
 
 func init() {
 	conn = Connection{
-		kind:   tool.String("db.rdbms.kind"),
-		host:   tool.String("db.rdbms.host"),
-		port:   tool.Int("db.rdbms.port"),
-		user:   tool.String("db.rdbms.user"),
-		pass:   tool.String("db.rdbms.pass"),
-		dbname: tool.String("db.rdbms.dbname"),
-		prefix: tool.String("db.rdbms.prefix"),
+		kind:   gox.String("db.rdbms.kind"),
+		host:   gox.String("db.rdbms.host"),
+		port:   gox.Int("db.rdbms.port"),
+		user:   gox.String("db.rdbms.user"),
+		pass:   gox.String("db.rdbms.pass"),
+		dbname: gox.String("db.rdbms.dbname"),
+		prefix: gox.String("db.rdbms.prefix"),
 	}
 
 	conf = &gorm.Config{

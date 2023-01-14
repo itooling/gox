@@ -2,6 +2,7 @@ package oth
 
 import (
 	"fmt"
+
 	"github.com/jinzhu/copier"
 )
 

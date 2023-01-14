@@ -1,7 +1,6 @@
 package jwt
 
 import (
-	"github.com/itooling/gox/tool"
 	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/base64"
@@ -10,6 +9,8 @@ import (
 	"hash"
 	"strings"
 	"time"
+
+	"github.com/itooling/gox"
 )
 
 const (
@@ -24,7 +25,7 @@ var (
 
 func init() {
 	secret = "secret" //todo change secret
-	expires = time.Minute * time.Duration(tool.Int("app.jwt.expires"))
+	expires = time.Minute * time.Duration(gox.Int("app.jwt.expires"))
 }
 
 type Header struct {

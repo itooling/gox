@@ -2,13 +2,14 @@ package oth
 
 import (
 	"fmt"
-	"github.com/duke-git/lancet/v2/strutil"
-	"github.com/google/uuid"
-	"github.com/matoous/go-nanoid/v2"
 	"os/exec"
 	"path/filepath"
 	"strconv"
 	"strings"
+
+	"github.com/duke-git/lancet/v2/strutil"
+	"github.com/google/uuid"
+	"github.com/matoous/go-nanoid/v2"
 )
 
 func UUID() string {
