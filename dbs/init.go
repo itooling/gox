@@ -49,7 +49,7 @@ func init() {
 			SlowThreshold:             200 * time.Millisecond,
 			LogLevel:                  logger.Warn,
 			Colorful:                  true,
-			IgnoreRecordNotFoundError: false,
+			IgnoreRecordNotFoundError: true,
 		}),
 		NamingStrategy: schema.NamingStrategy{
 			SingularTable: true,
