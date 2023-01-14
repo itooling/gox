@@ -25,7 +25,13 @@ var (
 
 func init() {
 	secret = "secret" //todo change secret
-	expires = time.Minute * time.Duration(gox.Int("app.jwt.expires"))
+	exp := gox.Int("app.jwt.expires")
+	if exp == 0 {
+		expires = time.Minute * time.Duration(30)
+	} else {
+		expires = time.Minute * time.Duration(exp)
+	}
+
 }
 
 type Header struct {
