@@ -1,12 +1,9 @@
 dev:
-  app:
-    log:
-      dir: log
-      max_num: 10
-      max_age: 30
-      max_size: 100
-    jwt:
-      expires: 30
+  log:
+    dir: log
+    max_num: 10
+    max_age: 30
+    max_size: 100
   db:
     rdbms:
       kind: lite

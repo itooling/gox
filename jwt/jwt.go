@@ -25,7 +25,7 @@ var (
 
 func init() {
 	secret = "secret" //todo change secret
-	exp := gox.Int("app.jwt.expires")
+	exp := gox.Int("jwt.expires")
 	if exp == 0 {
 		expires = time.Minute * time.Duration(30)
 	} else {

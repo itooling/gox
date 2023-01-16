@@ -59,16 +59,16 @@ func init() { //config
 }
 
 func init() { //log
-	dir = String("app.log.dir")
-	maxNum = Int("app.log.max_num")
-	maxAge = Int("app.log.max_age")
-	maxSize = Int("app.log.max_size")
+	dir = String("log.dir")
+	maxNum = Int("log.max_num")
+	maxAge = Int("log.max_age")
+	maxSize = Int("log.max_size")
 
 	if _, err := os.Stat(dir); !(err == nil || os.IsExist(err)) {
 		os.MkdirAll(dir, os.ModePerm)
 	}
 
-	path := filepath.Join(dir, "app.log")
+	path := filepath.Join(dir, "out.log")
 
 	lf := &lumberjack.Logger{
 		Filename:   path,
