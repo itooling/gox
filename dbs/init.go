@@ -24,24 +24,24 @@ const (
 )
 
 type Connection struct {
-	kind   string
-	host   string
-	port   int
-	user   string
-	pass   string
-	dbname string
-	prefix string
+	Kind   string
+	Host   string
+	Port   int
+	User   string
+	Pass   string
+	Dbname string
+	Prefix string
 }
 
 func init() {
 	conn = Connection{
-		kind:   gox.String("db.rdbms.kind"),
-		host:   gox.String("db.rdbms.host"),
-		port:   gox.Int("db.rdbms.port"),
-		user:   gox.String("db.rdbms.user"),
-		pass:   gox.String("db.rdbms.pass"),
-		dbname: gox.String("db.rdbms.dbname"),
-		prefix: gox.String("db.rdbms.prefix"),
+		Kind:   gox.String("db.rdbms.kind"),
+		Host:   gox.String("db.rdbms.host"),
+		Port:   gox.Int("db.rdbms.port"),
+		User:   gox.String("db.rdbms.user"),
+		Pass:   gox.String("db.rdbms.pass"),
+		Dbname: gox.String("db.rdbms.dbname"),
+		Prefix: gox.String("db.rdbms.prefix"),
 	}
 
 	conf = &gorm.Config{
@@ -53,15 +53,43 @@ func init() {
 		}),
 		NamingStrategy: schema.NamingStrategy{
 			SingularTable: true,
-			TablePrefix:   conn.prefix,
+			TablePrefix:   conn.Prefix,
 		},
 		QueryFields: true,
 	}
 
 }
 
-func DB() *gorm.DB {
-	switch conn.kind {
+func DB(con *Connection, cfg *gorm.Config) *gorm.DB {
+	if con != nil {
+		if con.Kind != "" {
+			conn.Kind = con.Kind
+		}
+		if con.Host != "" {
+			conn.Host = con.Host
+		}
+		if con.Port != 0 {
+			conn.Port = con.Port
+		}
+		if con.User != "" {
+			conn.User = con.User
+		}
+		if con.Pass != "" {
+			conn.Pass = con.Pass
+		}
+		if con.Dbname != "" {
+			conn.Dbname = con.Dbname
+		}
+		if con.Prefix != "" {
+			conn.Prefix = con.Prefix
+		}
+	}
+
+	if cfg != nil {
+		conf = cfg
+	}
+
+	switch conn.Kind {
 	case Sqlite:
 		SqliteInit()
 	case Mysql:

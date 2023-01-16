@@ -20,8 +20,8 @@ func SqliteInit() *gorm.DB {
 	}()
 
 	path := "file::memory:?cache=shared"
-	if conn.dbname != "" {
-		path = conn.prefix + conn.dbname + ".db"
+	if conn.Dbname != "" {
+		path = conn.Prefix + conn.Dbname + ".db"
 	}
 
 	if d, err := gorm.Open(sqlite.Open(path), conf); err != nil {

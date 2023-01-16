@@ -25,6 +25,7 @@ var (
 	env     string
 	cfn     string
 	dir     string
+	out     string
 	base    string
 	maxNum  int
 	maxAge  int
@@ -60,15 +61,32 @@ func init() { //config
 
 func init() { //log
 	dir = String("log.dir")
+	out = String("log.out")
 	maxNum = Int("log.max_num")
 	maxAge = Int("log.max_age")
 	maxSize = Int("log.max_size")
+
+	if dir == "" {
+		dir = "./log"
+	}
+	if out == "" {
+		out = "out.log"
+	}
+	if maxNum == 0 {
+		maxNum = 10
+	}
+	if maxAge == 0 {
+		maxAge = 30
+	}
+	if maxSize == 0 {
+		maxSize = 100
+	}
 
 	if _, err := os.Stat(dir); !(err == nil || os.IsExist(err)) {
 		os.MkdirAll(dir, os.ModePerm)
 	}
 
-	path := filepath.Join(dir, "out.log")
+	path := filepath.Join(dir, out)
 
 	lf := &lumberjack.Logger{
 		Filename:   path,
@@ -139,10 +157,10 @@ func ENV() string {
 	return env
 }
 
-func CONFIG() *viper.Viper {
+func Config() *viper.Viper {
 	return config
 }
 
-func LOGGER() *logrus.Logger {
+func Logger() *logrus.Logger {
 	return logger
 }

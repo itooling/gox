@@ -1,6 +1,7 @@
 dev:
   log:
     dir: log
+    out: out.log
     max_num: 10
     max_age: 30
     max_size: 100

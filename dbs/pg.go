@@ -20,7 +20,7 @@ func PostgresInit() *gorm.DB {
 	}()
 
 	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable TimeZone=Asia/Shanghai",
-		conn.host, conn.port, conn.user, conn.pass, conn.dbname)
+		conn.Host, conn.Port, conn.User, conn.Pass, conn.Dbname)
 
 	if d, err := gorm.Open(postgres.Open(dsn), conf); err != nil {
 		panic(err)

@@ -20,7 +20,7 @@ func MysqlInit() *gorm.DB {
 	}()
 
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local",
-		conn.user, conn.pass, conn.host, conn.port, conn.dbname)
+		conn.User, conn.Pass, conn.Host, conn.Port, conn.Dbname)
 
 	if d, err := gorm.Open(mysql.Open(dsn), conf); err != nil {
 		panic(err)
