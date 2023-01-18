@@ -153,7 +153,7 @@ func Bool(k string) bool {
 	return config.GetBool(env + "." + k)
 }
 
-func Eev() string {
+func Env() string {
 	return env
 }
 
