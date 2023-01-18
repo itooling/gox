@@ -35,13 +35,13 @@ type Connection struct {
 
 func init() {
 	conn = Connection{
-		Kind:   gox.String("db.rdbms.kind"),
-		Host:   gox.String("db.rdbms.host"),
-		Port:   gox.Int("db.rdbms.port"),
-		User:   gox.String("db.rdbms.user"),
-		Pass:   gox.String("db.rdbms.pass"),
-		Dbname: gox.String("db.rdbms.dbname"),
-		Prefix: gox.String("db.rdbms.prefix"),
+		Kind:   gox.String("app.dbs.rdbms.kind"),
+		Host:   gox.String("app.dbs.rdbms.host"),
+		Port:   gox.Int("app.dbs.rdbms.port"),
+		User:   gox.String("app.dbs.rdbms.user"),
+		Pass:   gox.String("app.dbs.rdbms.pass"),
+		Dbname: gox.String("app.dbs.rdbms.dbname"),
+		Prefix: gox.String("app.dbs.rdbms.prefix"),
 	}
 
 	conf = &gorm.Config{

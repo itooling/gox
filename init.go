@@ -60,11 +60,11 @@ func init() { //config
 }
 
 func init() { //log
-	dir = String("log.dir")
-	out = String("log.out")
-	maxNum = Int("log.max_num")
-	maxAge = Int("log.max_age")
-	maxSize = Int("log.max_size")
+	dir = String("app.log.dir")
+	out = String("app.log.out")
+	maxNum = Int("app.log.max_num")
+	maxAge = Int("app.log.max_age")
+	maxSize = Int("app.log.max_size")
 
 	if dir == "" {
 		dir = "./log"
@@ -153,7 +153,7 @@ func Bool(k string) bool {
 	return config.GetBool(env + "." + k)
 }
 
-func ENV() string {
+func Eev() string {
 	return env
 }
 
