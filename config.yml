@@ -1,0 +1,29 @@
+dev:
+  app:
+    net:
+      port: 8080
+    log:
+      dir: log
+      out: out.log
+      max_num: 10
+      max_age: 30
+      max_size: 100
+    dbs:
+      rdbms:
+        kind: lite
+        host: 127.0.0.1
+        port: 5432
+        user: root
+        pass: 123456
+        dbname: test
+        prefix: xxx_
+      redis:
+        addr: 127.0.0.1:6379
+        pass:
+        index: 0
+        nodes: 127.0.0.1:30001,127.0.0.1:30002,127.0.0.1:30003
+        nodes_pass:
+
+stg:
+
+prd:
