@@ -8,7 +8,6 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
-	"testing"
 
 	"github.com/natefinch/lumberjack"
 	"github.com/sirupsen/logrus"
@@ -34,11 +33,11 @@ var (
 	logger  *logrus.Logger
 )
 
-func init() { //config
+func init() { // config
 	flag.StringVar(&env, "env", "dev", "the env (dev, stg, prd)")
 	flag.StringVar(&cfn, "config", "config", "the config file")
 	if !flag.Parsed() {
-		testing.Init()
+		// testing.Init()
 		flag.Parse()
 	}
 

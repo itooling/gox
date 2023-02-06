@@ -1,6 +1,6 @@
 module gitee.com/itooling/gox
 
-go 1.18
+go 1.20
 
 require (
 	github.com/duke-git/lancet/v2 v2.1.13
