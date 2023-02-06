@@ -5,8 +5,8 @@ import (
 	"strings"
 	"time"
 
-	"gitee.com/itooling/gox/sys"
 	"github.com/go-redis/redis"
+	"github.com/itooling/gox/sys"
 )
 
 var rc redis.Cmdable

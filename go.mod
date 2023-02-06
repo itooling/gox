@@ -1,4 +1,4 @@
-module gitee.com/itooling/gox
+module github.com/itooling/gox
 
 go 1.20
 

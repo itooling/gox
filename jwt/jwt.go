@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"gitee.com/itooling/gox/sys"
+	"github.com/itooling/gox/sys"
 )
 
 const (

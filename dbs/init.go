@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	"gitee.com/itooling/gox/sys"
+	"github.com/itooling/gox/sys"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
