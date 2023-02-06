@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	"gitee.com/itooling/gox"
+	"gitee.com/itooling/gox/sys"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
@@ -35,13 +35,13 @@ type Connection struct {
 
 func init() {
 	conn = Connection{
-		Kind:   gox.String("app.dbs.rdbms.kind"),
-		Host:   gox.String("app.dbs.rdbms.host"),
-		Port:   gox.Int("app.dbs.rdbms.port"),
-		User:   gox.String("app.dbs.rdbms.user"),
-		Pass:   gox.String("app.dbs.rdbms.pass"),
-		Dbname: gox.String("app.dbs.rdbms.dbname"),
-		Prefix: gox.String("app.dbs.rdbms.prefix"),
+		Kind:   sys.String("app.dbs.rdbms.kind"),
+		Host:   sys.String("app.dbs.rdbms.host"),
+		Port:   sys.Int("app.dbs.rdbms.port"),
+		User:   sys.String("app.dbs.rdbms.user"),
+		Pass:   sys.String("app.dbs.rdbms.pass"),
+		Dbname: sys.String("app.dbs.rdbms.dbname"),
+		Prefix: sys.String("app.dbs.rdbms.prefix"),
 	}
 
 	conf = &gorm.Config{

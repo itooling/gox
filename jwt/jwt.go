@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"gitee.com/itooling/gox"
+	"gitee.com/itooling/gox/sys"
 )
 
 const (
@@ -25,7 +25,7 @@ var (
 
 func init() {
 	secret = "secret" //todo change secret
-	exp := gox.Int("jwt.expires")
+	exp := sys.Int("app.jwt.expires")
 	if exp == 0 {
 		expires = time.Minute * time.Duration(30)
 	} else {

@@ -1,9 +1,10 @@
-package gox
+package sys
 
 import (
 	"flag"
 	"fmt"
 	"io"
+	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -20,56 +21,69 @@ const (
 	PRD = "prd"
 )
 
-var (
-	env     string
-	cfn     string
-	dir     string
-	out     string
-	base    string
+var ( // config
+	env    string
+	cfn    string
+	typ    string
+	dir    string
+	base   string
+	config *viper.Viper
+)
+
+var ( // logger
+	path    string
+	file    string
 	maxNum  int
 	maxAge  int
 	maxSize int
-	config  *viper.Viper
 	logger  *logrus.Logger
 )
 
 func init() { // config
-	flag.StringVar(&env, "env", "dev", "the env (dev, stg, prd)")
-	flag.StringVar(&cfn, "config", "config", "the config file")
+	flag.StringVar(&cfn, "cfn", ".env", "config name")
+	flag.StringVar(&dir, "dir", ".", "config path")
+	flag.StringVar(&env, "env", "dev", "config model")
+	flag.StringVar(&typ, "typ", "yaml", "config type")
 	if !flag.Parsed() {
 		// testing.Init()
 		flag.Parse()
 	}
 
 	config = viper.New()
-	config.AddConfigPath(".")
-	config.AddConfigPath("./config")
+	config.AddConfigPath(dir)
 
 	if output, err := exec.Command("go", "env", "GOMOD").Output(); err == nil {
 		base = filepath.Dir(string(output))
 		config.AddConfigPath(base)
 	}
 
-	config.SetConfigName(cfn)
-	config.SetConfigType("yaml")
+	cpt := cfn + "." + env
+	if _, err := os.Stat(cpt); !(err == nil || os.IsExist(err)) {
+		if _, err := os.Create(cpt); err != nil {
+			log.Println(err)
+		}
+	}
+
+	config.SetConfigName(cpt)
+	config.SetConfigType(typ)
 	err := config.ReadInConfig()
 	if err != nil {
 		panic(err)
 	}
 }
 
-func init() { //log
-	dir = String("app.log.dir")
-	out = String("app.log.out")
+func init() { // logger
+	path = String("app.log.path")
+	file = String("app.log.file")
 	maxNum = Int("app.log.max_num")
 	maxAge = Int("app.log.max_age")
 	maxSize = Int("app.log.max_size")
 
-	if dir == "" {
-		dir = "./log"
+	if path == "" {
+		path = "./log"
 	}
-	if out == "" {
-		out = "out.log"
+	if file == "" {
+		file = "out.log"
 	}
 	if maxNum == 0 {
 		maxNum = 10
@@ -81,11 +95,11 @@ func init() { //log
 		maxSize = 100
 	}
 
-	if _, err := os.Stat(dir); !(err == nil || os.IsExist(err)) {
-		os.MkdirAll(dir, os.ModePerm)
+	if _, err := os.Stat(path); !(err == nil || os.IsExist(err)) {
+		os.MkdirAll(path, os.ModePerm)
 	}
 
-	path := filepath.Join(dir, out)
+	path := filepath.Join(path, file)
 
 	lf := &lumberjack.Logger{
 		Filename:   path,
@@ -124,8 +138,9 @@ func (f *LineFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	return []byte(content), nil
 }
 
+// config
 func Object(k string) interface{} {
-	return config.Get(env + "." + k)
+	return config.Get(k)
 }
 
 func DefaultObject(k string, def interface{}) interface{} {
@@ -137,39 +152,39 @@ func DefaultObject(k string, def interface{}) interface{} {
 }
 
 func String(k string) string {
-	return config.GetString(env + "." + k)
+	return config.GetString(k)
 }
 
 func Int(k string) int {
-	return config.GetInt(env + "." + k)
+	return config.GetInt(k)
 }
 
 func Float(k string) float64 {
-	return config.GetFloat64(env + "." + k)
+	return config.GetFloat64(k)
 }
 
 func Bool(k string) bool {
-	return config.GetBool(env + "." + k)
+	return config.GetBool(k)
 }
 
 func StringSlice(k string) []string {
-	return config.GetStringSlice(env + "." + k)
+	return config.GetStringSlice(k)
 }
 
 func StringMap(k string) map[string]interface{} {
-	return config.GetStringMap(env + "." + k)
+	return config.GetStringMap(k)
 }
 
 func StringMapString(k string) map[string]string {
-	return config.GetStringMapString(env + "." + k)
+	return config.GetStringMapString(k)
 }
 
 func StringMapStringSlice(k string) map[string][]string {
-	return config.GetStringMapStringSlice(env + "." + k)
+	return config.GetStringMapStringSlice(k)
 }
 
 func IntSlice(k string) []int {
-	return config.GetIntSlice(env + "." + k)
+	return config.GetIntSlice(k)
 }
 
 func Env() string {
