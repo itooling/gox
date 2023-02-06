@@ -153,6 +153,26 @@ func Bool(k string) bool {
 	return config.GetBool(env + "." + k)
 }
 
+func StringSlice(k string) []string {
+	return config.GetStringSlice(env + "." + k)
+}
+
+func StringMap(k string) map[string]interface{} {
+	return config.GetStringMap(env + "." + k)
+}
+
+func StringMapString(k string) map[string]string {
+	return config.GetStringMapString(env + "." + k)
+}
+
+func StringMapStringSlice(k string) map[string][]string {
+	return config.GetStringMapStringSlice(env + "." + k)
+}
+
+func IntSlice(k string) []int {
+	return config.GetIntSlice(env + "." + k)
+}
+
 func Env() string {
 	return env
 }
