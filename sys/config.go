@@ -9,6 +9,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
+	"testing"
 
 	"github.com/natefinch/lumberjack"
 	"github.com/sirupsen/logrus"
@@ -45,7 +46,9 @@ func init() { // config
 	flag.StringVar(&env, "env", "dev", "config model")
 	flag.StringVar(&typ, "typ", "yaml", "config type")
 	if !flag.Parsed() {
-		// testing.Init()
+		if env == DEV {
+			testing.Init()
+		}
 		flag.Parse()
 	}
 
