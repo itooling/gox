@@ -20,11 +20,11 @@ func SqliteInit() *gorm.DB {
 	}()
 
 	path := "file::memory:?cache=shared"
-	if conn.Dbname != "" {
-		path = conn.Prefix + conn.Dbname + ".db"
+	if cn.Dbname != "" {
+		path = cn.Prefix + cn.Dbname + ".db"
 	}
 
-	if d, err := gorm.Open(sqlite.Open(path), conf); err != nil {
+	if d, err := gorm.Open(sqlite.Open(path), cf); err != nil {
 		panic(err)
 	} else {
 		db = d

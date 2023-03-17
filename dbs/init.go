@@ -3,6 +3,7 @@ package dbs
 import (
 	"log"
 	"os"
+	"reflect"
 	"time"
 
 	"github.com/itooling/gox/sys"
@@ -12,9 +13,9 @@ import (
 )
 
 var (
-	db   *gorm.DB
-	conf *gorm.Config
-	conn Connection
+	db *gorm.DB
+	cf *gorm.Config
+	cn *Connection
 )
 
 const (
@@ -34,7 +35,7 @@ type Connection struct {
 }
 
 func init() {
-	conn = Connection{
+	cn = &Connection{
 		Kind:   sys.String("app.dbs.rdbms.kind"),
 		Host:   sys.String("app.dbs.rdbms.host"),
 		Port:   sys.Int("app.dbs.rdbms.port"),
@@ -44,23 +45,44 @@ func init() {
 		Prefix: sys.String("app.dbs.rdbms.prefix"),
 	}
 
-	conf = &gorm.Config{
+	cf = &gorm.Config{
 		Logger: logger.New(log.New(os.Stdout, "\r\n", log.LstdFlags), logger.Config{
-			SlowThreshold:             200 * time.Millisecond,
+			SlowThreshold:             300 * time.Millisecond,
 			LogLevel:                  logger.Warn,
 			Colorful:                  true,
 			IgnoreRecordNotFoundError: true,
 		}),
 		NamingStrategy: schema.NamingStrategy{
 			SingularTable: true,
-			TablePrefix:   conn.Prefix,
+			TablePrefix:   cn.Prefix,
 		},
 		QueryFields: true,
 	}
-
 }
 
 func DB() *gorm.DB {
+	switch cn.Kind {
+	case Sqlite:
+		SqliteInit()
+	case Mysql:
+		MysqlInit()
+	case Postgres:
+		PostgresInit()
+	default:
+		SqliteInit()
+	}
+	return db
+}
+
+func DBS(conn *Connection, config *gorm.Config) *gorm.DB {
+	if conn != nil {
+		CopyStruct(cn, conn)
+	}
+
+	if config != nil {
+		CopyStruct(cf, config)
+	}
+
 	switch conn.Kind {
 	case Sqlite:
 		SqliteInit()
@@ -74,44 +96,40 @@ func DB() *gorm.DB {
 	return db
 }
 
-func DBS(con *Connection, cfg *gorm.Config) *gorm.DB {
-	if con != nil {
-		if con.Kind != "" {
-			conn.Kind = con.Kind
-		}
-		if con.Host != "" {
-			conn.Host = con.Host
-		}
-		if con.Port != 0 {
-			conn.Port = con.Port
-		}
-		if con.User != "" {
-			conn.User = con.User
-		}
-		if con.Pass != "" {
-			conn.Pass = con.Pass
-		}
-		if con.Dbname != "" {
-			conn.Dbname = con.Dbname
-		}
-		if con.Prefix != "" {
-			conn.Prefix = con.Prefix
-		}
-	}
+func CopyStruct(dst, src interface{}) {
+	dstValue := reflect.ValueOf(dst).Elem()
+	srcValue := reflect.ValueOf(src).Elem()
 
-	if cfg != nil {
-		conf = cfg
-	}
+	for i := 0; i < srcValue.NumField(); i++ {
+		srcField := srcValue.Field(i)
+		srcName := srcValue.Type().Field(i).Name
+		dstFieldByName := dstValue.FieldByName(srcName)
 
-	switch conn.Kind {
-	case Sqlite:
-		SqliteInit()
-	case Mysql:
-		MysqlInit()
-	case Postgres:
-		PostgresInit()
-	default:
-		SqliteInit()
+		if dstFieldByName.IsValid() {
+			switch dstFieldByName.Kind() {
+			case reflect.Ptr:
+				switch srcField.Kind() {
+				case reflect.Ptr:
+					if srcField.IsNil() {
+						dstFieldByName.Set(reflect.New(dstFieldByName.Type().Elem()))
+					} else {
+						dstFieldByName.Set(srcField)
+					}
+				default:
+					dstFieldByName.Set(srcField.Addr())
+				}
+			default:
+				switch srcField.Kind() {
+				case reflect.Ptr:
+					if srcField.IsNil() {
+						dstFieldByName.Set(reflect.Zero(dstFieldByName.Type()))
+					} else {
+						dstFieldByName.Set(srcField.Elem())
+					}
+				default:
+					dstFieldByName.Set(srcField)
+				}
+			}
+		}
 	}
-	return db
 }
