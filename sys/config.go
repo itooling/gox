@@ -23,9 +23,8 @@ const (
 )
 
 var ( // config
-	env    string
-	typ    string
 	dir    string
+	env    string
 	base   string
 	config *viper.Viper
 )
@@ -40,9 +39,8 @@ var ( // logger
 )
 
 func init() { // config
-	flag.StringVar(&env, "env", "dev", "run env(dev/stg/prd)")
-	flag.StringVar(&typ, "typ", "yaml", "config type")
 	flag.StringVar(&dir, "dir", ".", "config path")
+	flag.StringVar(&env, "env", "dev", "the env(dev/stg/prd)")
 	if !flag.Parsed() {
 		if env == DEV {
 			testing.Init()
@@ -58,15 +56,15 @@ func init() { // config
 		config.AddConfigPath(base)
 	}
 
-	cpt := env + ".yml"
-	if _, err := os.Stat(cpt); !(err == nil || os.IsExist(err)) {
-		if _, err := os.Create(cpt); err != nil {
+	cfn := env + ".yml"
+	if _, err := os.Stat(cfn); !(err == nil || os.IsExist(err)) {
+		if _, err := os.Create(cfn); err != nil {
 			log.Println(err)
 		}
 	}
 
-	config.SetConfigName(cpt)
-	config.SetConfigType(typ)
+	config.SetConfigName(cfn)
+	config.SetConfigType("yaml")
 	err := config.ReadInConfig()
 	if err != nil {
 		panic(err)
