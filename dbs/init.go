@@ -60,7 +60,21 @@ func init() {
 
 }
 
-func DB(con *Connection, cfg *gorm.Config) *gorm.DB {
+func DB() *gorm.DB {
+	switch conn.Kind {
+	case Sqlite:
+		SqliteInit()
+	case Mysql:
+		MysqlInit()
+	case Postgres:
+		PostgresInit()
+	default:
+		SqliteInit()
+	}
+	return db
+}
+
+func DBS(con *Connection, cfg *gorm.Config) *gorm.DB {
 	if con != nil {
 		if con.Kind != "" {
 			conn.Kind = con.Kind

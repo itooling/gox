@@ -24,7 +24,6 @@ const (
 
 var ( // config
 	env    string
-	cfn    string
 	typ    string
 	dir    string
 	base   string
@@ -41,10 +40,9 @@ var ( // logger
 )
 
 func init() { // config
-	flag.StringVar(&cfn, "cfn", ".env", "config name")
-	flag.StringVar(&dir, "dir", ".", "config path")
-	flag.StringVar(&env, "env", "dev", "config model")
+	flag.StringVar(&env, "env", "dev", "run env(dev/stg/prd)")
 	flag.StringVar(&typ, "typ", "yaml", "config type")
+	flag.StringVar(&dir, "dir", ".", "config path")
 	if !flag.Parsed() {
 		if env == DEV {
 			testing.Init()
@@ -60,7 +58,7 @@ func init() { // config
 		config.AddConfigPath(base)
 	}
 
-	cpt := cfn + "." + env
+	cpt := env + ".yml"
 	if _, err := os.Stat(cpt); !(err == nil || os.IsExist(err)) {
 		if _, err := os.Create(cpt); err != nil {
 			log.Println(err)
