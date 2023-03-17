@@ -3,9 +3,9 @@ package dbs
 import (
 	"log"
 	"os"
-	"reflect"
 	"time"
 
+	"github.com/itooling/gox/oth"
 	"github.com/itooling/gox/sys"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -76,14 +76,14 @@ func DB() *gorm.DB {
 
 func DBS(conn *Connection, config *gorm.Config) *gorm.DB {
 	if conn != nil {
-		CopyStruct(cn, conn)
+		oth.CopyStruct(cn, conn)
 	}
 
 	if config != nil {
-		CopyStruct(cf, config)
+		oth.CopyStruct(cf, config)
 	}
 
-	switch conn.Kind {
+	switch cn.Kind {
 	case Sqlite:
 		SqliteInit()
 	case Mysql:
@@ -94,42 +94,4 @@ func DBS(conn *Connection, config *gorm.Config) *gorm.DB {
 		SqliteInit()
 	}
 	return db
-}
-
-func CopyStruct(dst, src interface{}) {
-	dstValue := reflect.ValueOf(dst).Elem()
-	srcValue := reflect.ValueOf(src).Elem()
-
-	for i := 0; i < srcValue.NumField(); i++ {
-		srcField := srcValue.Field(i)
-		srcName := srcValue.Type().Field(i).Name
-		dstFieldByName := dstValue.FieldByName(srcName)
-
-		if dstFieldByName.IsValid() {
-			switch dstFieldByName.Kind() {
-			case reflect.Ptr:
-				switch srcField.Kind() {
-				case reflect.Ptr:
-					if srcField.IsNil() {
-						dstFieldByName.Set(reflect.New(dstFieldByName.Type().Elem()))
-					} else {
-						dstFieldByName.Set(srcField)
-					}
-				default:
-					dstFieldByName.Set(srcField.Addr())
-				}
-			default:
-				switch srcField.Kind() {
-				case reflect.Ptr:
-					if srcField.IsNil() {
-						dstFieldByName.Set(reflect.Zero(dstFieldByName.Type()))
-					} else {
-						dstFieldByName.Set(srcField.Elem())
-					}
-				default:
-					dstFieldByName.Set(srcField)
-				}
-			}
-		}
-	}
 }

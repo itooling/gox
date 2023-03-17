@@ -11,7 +11,7 @@ func CopyStruct(dst, src interface{}) {
 		srcName := srcValue.Type().Field(i).Name
 		dstFieldByName := dstValue.FieldByName(srcName)
 
-		if dstFieldByName.IsValid() {
+		if dstFieldByName.IsValid() && dstFieldByName.CanSet() {
 			switch dstFieldByName.Kind() {
 			case reflect.Ptr:
 				switch srcField.Kind() {
