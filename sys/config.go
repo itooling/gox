@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"io"
-	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -59,7 +58,7 @@ func init() { // config
 	cfn := env + ".yml"
 	/* if _, err := os.Stat(cfn); !(err == nil || os.IsExist(err)) {
 		if _, err := os.Create(cfn); err != nil {
-			log.Println(err)
+			fmt.Println(err)
 		}
 	} */
 
