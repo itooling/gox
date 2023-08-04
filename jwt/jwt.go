@@ -36,18 +36,18 @@ func init() {
 
 type Header struct {
 	Alg string `json:"alg,omitempty"`
-	Typ string `json:"ptr,omitempty"`
+	Typ string `json:"typ,omitempty"`
 }
 
 type Payload struct {
-	Id        string         `json:"jti,omitempty"`
-	Subject   string         `json:"sub,omitempty"`
+	JwtId     string         `json:"jti,omitempty"`
 	Issuer    string         `json:"iss,omitempty"`
+	Subject   string         `json:"sub,omitempty"`
 	IssuedAt  int64          `json:"iat,omitempty"`
 	Audience  string         `json:"aud,omitempty"`
 	ExpiresAt int64          `json:"exp,omitempty"`
 	NotBefore int64          `json:"nbf,omitempty"`
-	Other     map[string]any `json:"oth,omitempty"`
+	Data      map[string]any `json:"dat,omitempty"`
 }
 
 type Signature struct {
@@ -91,7 +91,7 @@ func Create(id string) string {
 			Typ: JWT,
 		},
 		payload: Payload{
-			Id:        strings.ToUpper(id),
+			JwtId:     id,
 			ExpiresAt: time.Now().Add(expires).Unix(),
 		},
 	}
@@ -99,15 +99,15 @@ func Create(id string) string {
 	return s.String()
 }
 
-func Creates(id string, other map[string]any) string {
+func Creates(id string, data map[string]any) string {
 	s := Signature{
 		header: Header{
 			Alg: ALG,
 			Typ: JWT,
 		},
 		payload: Payload{
-			Id:        strings.ToUpper(id),
-			Other:     other,
+			JwtId:     id,
+			Data:      data,
 			ExpiresAt: time.Now().Add(expires).Unix(),
 		},
 	}
