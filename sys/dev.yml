@@ -10,7 +10,7 @@ app:
       kind: pgsql
       host: 127.0.0.1
       port: 5432
-      user: root
+      user: postgres
       pass: 123456
       dbname: test
       prefix: xxx_
