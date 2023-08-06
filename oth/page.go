@@ -20,6 +20,12 @@ func IPage[T any](current, size, total int, list []T) *Page[T] {
 	if total%size == 0 {
 		count = total / size
 	}
+	if current < 1 {
+		current = 1
+	}
+	if current > count {
+		current = count
+	}
 	return &Page[T]{
 		Current: current,
 		Size:    size,
@@ -36,6 +42,12 @@ func ToPage[T any](current, size int, data []T) *Page[T] {
 	count := total/size + 1
 	if total%size == 0 {
 		count = total / size
+	}
+	if current < 1 {
+		current = 1
+	}
+	if current > count {
+		current = count
 	}
 	beg := size * (current - 1)
 	end := beg + size
