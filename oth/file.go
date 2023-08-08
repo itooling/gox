@@ -8,6 +8,7 @@ func FileExist(path string) bool {
 	if path == "" {
 		return false
 	}
+
 	_, err := os.Stat(path)
 	if err == nil {
 		return true
@@ -16,5 +17,6 @@ func FileExist(path string) bool {
 	if os.IsNotExist(err) {
 		return false
 	}
+	
 	return false
 }
