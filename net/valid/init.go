@@ -14,10 +14,10 @@ import (
 
 // Validator struct
 type Validator struct {
-	Tag  string         // tag name
-	Msg  string         // error msg
-	Name string         // field name
-	Func validator.Func // validator function
+	Tag   string         // tag name
+	Msg   string         // error msg
+	Field string         // field name
+	Func  validator.Func // validator function
 }
 
 func NewValidator(tag, msg string, f validator.Func) *Validator {
@@ -50,8 +50,8 @@ func reset() {
 	vzh.RegisterDefaultTranslations(validate, trans)
 }
 
-// Translate translate error to error msg
-func Translate(err error) error {
+// Validation convert error to error msg
+func Validation(err error) error {
 	if e, ok := err.(*validator.InvalidValidationError); ok {
 		return e
 	}
@@ -60,9 +60,9 @@ func Translate(err error) error {
 		for _, err := range errs {
 			tag, field := err.Tag(), err.Field()
 			if t, ex := tags[tag]; ex {
-				msg = fmt.Sprintf("%s %s", field, t.Msg)
-				if t.Name != "" {
-					msg = strings.Replace(msg, field, t.Name, 1)
+				msg = fmt.Sprintf("%s%s", field, t.Msg)
+				if t.Field != "" {
+					msg = strings.Replace(msg, field, t.Field, 1)
 				}
 			} else {
 				msg = err.Translate(trans)
