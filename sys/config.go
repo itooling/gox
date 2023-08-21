@@ -56,11 +56,11 @@ func init() { // config
 	}
 
 	cfn := env + ".yml"
-	/* if _, err := os.Stat(cfn); !(err == nil || os.IsExist(err)) {
-		if _, err := os.Create(cfn); err != nil {
-			fmt.Println(err)
-		}
-	} */
+	// if _, err := os.Stat(cfn); !(err == nil || os.IsExist(err)) {
+	// 	if _, err := os.Create(cfn); err != nil {
+	// 		fmt.Println(err)
+	// 	}
+	// }
 
 	config.SetConfigName(cfn)
 	config.SetConfigType("yaml")
