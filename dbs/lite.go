@@ -3,7 +3,7 @@ package dbs
 import (
 	"fmt"
 
-	"gorm.io/driver/sqlite"
+	"github.com/itooling/gorm-sqlite-cipher"
 	"gorm.io/gorm"
 )
 
@@ -23,8 +23,11 @@ func SqliteInit() *gorm.DB {
 	if cn.Dbname != "" {
 		path = cn.Prefix + cn.Dbname + ".db"
 	}
+	if cn.Pass != "" {
+		path += fmt.Sprintf("?_pragma_key=%s", cn.Pass)
+	}
 
-	if d, err := gorm.Open(sqlite.Open(path), cf); err != nil {
+	if d, err := gorm.Open(sqlcipher.Open(path), cf); err != nil {
 		panic(err)
 	} else {
 		db = d
