@@ -1,72 +1,119 @@
 package oth
 
 import (
-	"net/http"
 	"time"
 
 	"gorm.io/gorm"
 )
 
 const (
-	MsgOk   = "ok"
-	MsgFail = "fail"
+	codeOK   = 0
+	codeFail = 1
+
+	msgOk   = "ok"
+	msgFail = "fail"
+
+	defaultTenant = "one"
 )
 
 type Model struct {
 	ID        uint           `json:"id" gorm:"column:id;primaryKey;comment:主键"`
-	Tenant    string         `json:"tenant" gorm:"index;column:tenant;comment:租户"`
+	Tenant    string         `json:"-" gorm:"index;column:tenant;comment:租户"`
 	CreatedAt time.Time      `json:"createdAt" gorm:"autoCreateTime;default:current_timestamp;comment:创建日期"`
 	UpdatedAt time.Time      `json:"updatedAt" gorm:"autoUpdateTime;default:current_timestamp;comment:更新日期"`
-	DeletedAt gorm.DeletedAt `json:"deletedAt" gorm:"index;comment:逻辑删除"`
+	DeletedAt gorm.DeletedAt `json:"-" gorm:"index;comment:逻辑删除"`
 }
 
 func (m *Model) BeforeCreate(tx *gorm.DB) (err error) {
 	if m.Tenant == "" {
-		m.Tenant = "one"
+		m.Tenant = defaultTenant
 	}
 	return nil
 }
 
 type Result struct {
 	Message string `json:"message,omitempty"`
-	Code    int    `json:"code,omitempty"`
+	Code    int    `json:"code"`
 	Data    any    `json:"data,omitempty"`
 }
 
-func Success(data any, msg ...string) *Result {
-	m := MsgOk
-	if len(msg) > 0 {
-		m = msg[0]
-	}
+func Ok() *Result {
 	r := Result{
-		Message: m,
-		Code:    http.StatusOK,
+		Message: msgOk,
+		Code:    codeOK,
+	}
+	return &r
+}
+
+func OkMsg(msg string) *Result {
+	r := Result{
+		Message: msg,
+		Code:    codeOK,
+	}
+	return &r
+}
+
+func OkCode(code int) *Result {
+	r := Result{
+		Message: msgOk,
+		Code:    code,
+	}
+	return &r
+}
+
+func OkData(data any) *Result {
+	r := Result{
+		Message: msgOk,
+		Code:    codeOK,
 		Data:    data,
 	}
 	return &r
 }
 
-func SuccessCode(data any, code int, msg ...string) *Result {
-	m := MsgOk
-	if len(msg) > 0 {
-		m = msg[0]
-	}
+func OkDataCode(data any, code int) *Result {
 	r := Result{
-		Message: m,
+		Message: msgOk,
 		Code:    code,
 		Data:    data,
 	}
 	return &r
 }
 
-func Fail(msg string) *Result {
+func OkDataMsg(data any, msg string) *Result {
 	r := Result{
 		Message: msg,
+		Code:    codeOK,
+		Data:    data,
 	}
 	return &r
 }
 
-func FailCode(msg string, code int) *Result {
+func OkDataMsgCode(data any, msg string, code int) *Result {
+	r := Result{
+		Message: msg,
+		Code:    code,
+		Data:    data,
+	}
+	return &r
+}
+
+func Fail() *Result {
+	r := Result{
+		Message: msgFail,
+		Code:    codeFail,
+	}
+	return &r
+}
+
+func FailMsg(msg string) *Result {
+	r := Result{
+		Message: msg,
+		Code:    codeFail,
+	}
+	return &r
+}
+
+func FailMsgCode(msg string, code int) *Result {
 	r := Result{
 		Message: msg,
 		Code:    code,
@@ -74,15 +121,16 @@ func FailCode(msg string, code int) *Result {
 	return &r
 }
 
-func FailData(msg string, data any) *Result {
+func FailMsgData(msg string, data any) *Result {
 	r := Result{
 		Message: msg,
+		Code:    codeFail,
 		Data:    data,
 	}
 	return &r
 }
 
-func FailCodeData(msg string, code int, data any) *Result {
+func FailMsgCodeData(msg string, code int, data any) *Result {
 	r := Result{
 		Message: msg,
 		Code:    code,
