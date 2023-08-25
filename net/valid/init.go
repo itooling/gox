@@ -23,6 +23,9 @@ type Validator struct {
 func NewValidator(tag, msg string, f validator.Func) *Validator {
 	return &Validator{Tag: tag, Msg: msg, Func: f}
 }
+func NewValidatorWithField(tag, msg string, f validator.Func, field string) *Validator {
+	return &Validator{Tag: tag, Msg: msg, Func: f, Field: field}
+}
 
 var (
 	uni      *ut.UniversalTranslator
@@ -58,14 +61,41 @@ func Validation(err error) error {
 	if errs, ok := err.(validator.ValidationErrors); ok {
 		var msg string
 		for _, err := range errs {
-			tag, field := err.Tag(), err.Field()
-			if t, ex := tags[tag]; ex {
-				msg = fmt.Sprintf("%s%s", field, t.Msg)
-				if t.Field != "" {
-					msg = strings.Replace(msg, field, t.Field, 1)
+			t, field := err.Tag(), err.Field()
+			if v, ex := tags[t]; ex {
+				msg = fmt.Sprintf("%s%s", field, v.Msg)
+				if v.Field != "" {
+					msg = strings.Replace(msg, field, v.Field, 1)
 				}
 			} else {
 				msg = err.Translate(trans)
+			}
+		}
+		if msg != "" {
+			return errors.New(msg)
+		}
+	}
+	return nil
+}
+
+// Validation convert error to error msg by tag name
+func ValidationWithTag(err error, tag string) error {
+	if e, ok := err.(*validator.InvalidValidationError); ok {
+		return e
+	}
+	if errs, ok := err.(validator.ValidationErrors); ok {
+		var msg string
+		for _, err := range errs {
+			t, field := err.Tag(), err.Field()
+			if strings.EqualFold(t, tag) {
+				if v, ex := tags[t]; ex {
+					msg = fmt.Sprintf("%s%s", field, v.Msg)
+					if v.Field != "" {
+						msg = strings.Replace(msg, field, v.Field, 1)
+					}
+				} else {
+					msg = err.Translate(trans)
+				}
 			}
 		}
 		if msg != "" {
