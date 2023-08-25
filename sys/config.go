@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"io"
+	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -13,6 +14,7 @@ import (
 	"github.com/natefinch/lumberjack"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
+	"gopkg.in/yaml.v3"
 )
 
 const (
@@ -21,14 +23,14 @@ const (
 	PRD = "prd"
 )
 
-var ( // config
+var (
 	dir    string
 	env    string
 	base   string
 	config *viper.Viper
 )
 
-var ( // logger
+var (
 	path    string
 	file    string
 	maxNum  int
@@ -37,7 +39,7 @@ var ( // logger
 	logger  *logrus.Logger
 )
 
-func init() { // config
+func init() {
 	flag.StringVar(&dir, "dir", ".", "config path")
 	flag.StringVar(&env, "env", "dev", "the env(dev/stg/prd)")
 	if !flag.Parsed() {
@@ -56,11 +58,16 @@ func init() { // config
 	}
 
 	cfn := env + ".yml"
-	// if _, err := os.Stat(cfn); !(err == nil || os.IsExist(err)) {
-	// 	if _, err := os.Create(cfn); err != nil {
-	// 		fmt.Println(err)
-	// 	}
-	// }
+	ncd := NewConfigDefault()
+	if _, err := os.Stat(cfn); !(err == nil || os.IsExist(err)) {
+		if cf, err := os.Create(cfn); err != nil {
+			log.Println(err)
+		} else if out, err := yaml.Marshal(ncd); err != nil {
+			log.Println(err)
+		} else {
+			cf.Write(out)
+		}
+	}
 
 	config.SetConfigName(cfn)
 	config.SetConfigType("yaml")
@@ -70,7 +77,7 @@ func init() { // config
 	}
 }
 
-func init() { // logger
+func init() {
 	path = String("app.log.path")
 	file = String("app.log.file")
 	maxNum = Int("app.log.max_num")
@@ -136,7 +143,6 @@ func (f *LineFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	return []byte(content), nil
 }
 
-// config
 func Object(k string) interface{} {
 	return config.Get(k)
 }

@@ -74,7 +74,7 @@ func DB() *gorm.DB {
 	return db
 }
 
-func DBS(conn *Connection, config *gorm.Config) *gorm.DB {
+func DBWithOption(conn *Connection, config *gorm.Config) *gorm.DB {
 	if conn != nil {
 		oth.CopyStruct(cn, conn)
 	}
