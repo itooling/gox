@@ -1,19 +1,19 @@
 package std
 
-func DelSliceElement[T comparable](s []T, e T) []T {
-	dst := make([]T, len(s))
-	for _, v := range s {
-		if v != e {
+func DelSliceIndex[T any](src []T, idx int) []T {
+	dst := make([]T, 0, len(src)-1)
+	for i, v := range src {
+		if i != idx {
 			dst = append(dst, v)
 		}
 	}
 	return dst
 }
 
-func DelSliceIndex[T comparable](s []T, idx int) []T {
-	dst := make([]T, len(s))
-	for i, v := range s {
-		if i != idx {
+func DelSliceElement[T comparable](src []T, e T) []T {
+	dst := make([]T, 0, len(src)-1)
+	for _, v := range src {
+		if v != e {
 			dst = append(dst, v)
 		}
 	}

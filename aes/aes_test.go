@@ -32,9 +32,9 @@ func TestAesKeyGenerateRand(t *testing.T) {
 
 func TestAes(t *testing.T) {
 	key := GenAesKey([]byte(aesKey))
-	en, _ := EncryptECB([]byte(origin), key)
+	en, _ := EncryptCBC([]byte(origin), key)
 	fmt.Println(base64.StdEncoding.EncodeToString(en))
-	de, _ := DecryptECB(en, key)
+	de, _ := DecryptCBC(en, key)
 	fmt.Println(string(de))
 }
 
@@ -46,7 +46,7 @@ func TestWriteObj(t *testing.T) {
 	}}
 	buf := new(bytes.Buffer)
 	gob.NewEncoder(buf).Encode(&u)
-	enc, _ := EncryptECB(buf.Bytes(), gobKey)
+	enc, _ := EncryptCBC(buf.Bytes(), gobKey)
 	fo, _ := os.Create("out")
 	gob.NewEncoder(fo).Encode(enc)
 }
@@ -55,7 +55,7 @@ func TestReadObj(t *testing.T) {
 	fi, _ := os.Open("out")
 	buf := make([]byte, 0)
 	gob.NewDecoder(fi).Decode(&buf)
-	dec, _ := DecryptECB(buf, gobKey)
+	dec, _ := DecryptCBC(buf, gobKey)
 	data := bytes.NewBuffer(dec)
 	u := new(User)
 	gob.NewDecoder(data).Decode(u)

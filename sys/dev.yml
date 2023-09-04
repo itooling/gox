@@ -1,4 +1,6 @@
 app:
+    net:
+        port: 8080
     log:
         path: log
         file: out.log

@@ -9,28 +9,64 @@ import (
 )
 
 func GenAesKey(key []byte) []byte {
-	gen := make([]byte, aes.BlockSize)
-	copy(gen, key)
+	ak := make([]byte, aes.BlockSize)
+	copy(ak, key)
 	for i := 16; i < len(key); {
 		for j := 0; j < 16 && i < len(key); j, i = j+1, i+1 {
-			gen[j] ^= key[i]
+			ak[j] ^= key[i]
 		}
 	}
-	return gen
+	return ak
 }
 
-func GenAesKeyRand(l ...int) []byte {
+func GenAesKeyRand(size ...int) []byte {
 	rd := rand.New(rand.NewSource(time.Now().Unix()))
-	length := aes.BlockSize
-	if len(l) > 0 {
-		length = l[0]
+	bs := aes.BlockSize
+	if len(size) > 0 {
+		bs = size[0]
 	}
-	bytes := make([]byte, length)
-	for i := 0; i < length; i++ {
+	ak := make([]byte, bs)
+	for i := 0; i < bs; i++ {
 		b := rd.Intn(26) + 65
-		bytes[i] = byte(b)
+		ak[i] = byte(b)
 	}
-	return bytes
+	return ak
+}
+
+func EncryptCBC(src, key []byte) ([]byte, error) {
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		return nil, err
+	}
+
+	size := block.BlockSize()
+
+	padding := size - len(src)%size
+	text := bytes.Repeat([]byte{byte(padding)}, padding)
+	src = append(src, text...)
+
+	mode := cipher.NewCBCEncrypter(block, key[:size])
+	en := make([]byte, len(src))
+	mode.CryptBlocks(en, src)
+	return en, nil
+}
+
+func DecryptCBC(src, key []byte) ([]byte, error) {
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		return nil, err
+	}
+
+	size := block.BlockSize()
+	mode := cipher.NewCBCDecrypter(block, key[:size])
+	de := make([]byte, len(src))
+	mode.CryptBlocks(de, src)
+
+	length := len(de)
+	padding := int(de[length-1])
+	de = de[:(length - padding)]
+
+	return de, nil
 }
 
 func EncryptECB(src, key []byte) ([]byte, error) {
@@ -72,40 +108,4 @@ func DecryptECB(src, key []byte) ([]byte, error) {
 	}
 
 	return de[:padding], nil
-}
-
-func EncryptCBC(src, key []byte) ([]byte, error) {
-	block, err := aes.NewCipher(key)
-	if err != nil {
-		return nil, err
-	}
-
-	size := block.BlockSize()
-
-	padding := size - len(src)%size
-	text := bytes.Repeat([]byte{byte(padding)}, padding)
-	src = append(src, text...)
-
-	mode := cipher.NewCBCEncrypter(block, key[:size])
-	en := make([]byte, len(src))
-	mode.CryptBlocks(en, src)
-	return en, nil
-}
-
-func DecryptCBC(src, key []byte) ([]byte, error) {
-	block, err := aes.NewCipher(key)
-	if err != nil {
-		return nil, err
-	}
-
-	size := block.BlockSize()
-	mode := cipher.NewCBCDecrypter(block, key[:size])
-	de := make([]byte, len(src))
-	mode.CryptBlocks(de, src)
-
-	length := len(de)
-	padding := int(de[length-1])
-	de = de[:(length - padding)]
-
-	return de, nil
 }

@@ -1,5 +1,9 @@
 package sys
 
+type ConfigNet struct {
+	Port int `yaml:"port"`
+}
+
 type ConfigLog struct {
 	Path    string `yaml:"path"`
 	File    string `yaml:"file"`
@@ -32,6 +36,7 @@ type ConfigDbsRedis struct {
 }
 
 type ConfigApp struct {
+	Net ConfigNet `yaml:"net"`
 	Log ConfigLog `yaml:"log"`
 	Dbs ConfigDbs `yaml:"dbs"`
 }
@@ -43,6 +48,9 @@ type ConfigDefault struct {
 func NewConfigDefault() *ConfigDefault {
 	return &ConfigDefault{
 		App: ConfigApp{
+			Net: ConfigNet{
+				Port: 8080,
+			},
 			Log: ConfigLog{
 				Path:    "log",
 				File:    "out.log",
