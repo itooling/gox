@@ -36,18 +36,22 @@ type Connection struct {
 
 func init() {
 	cn = &Connection{
-		Kind:   sys.String("app.dbs.rdbms.kind"),
-		Host:   sys.String("app.dbs.rdbms.host"),
-		Port:   sys.Int("app.dbs.rdbms.port"),
-		User:   sys.String("app.dbs.rdbms.user"),
-		Pass:   sys.String("app.dbs.rdbms.pass"),
-		Dbname: sys.String("app.dbs.rdbms.dbname"),
-		Prefix: sys.String("app.dbs.rdbms.prefix"),
+		Kind:   sys.String("rdbms.kind"),
+		Host:   sys.String("rdbms.host"),
+		Port:   sys.Int("rdbms.port"),
+		User:   sys.String("rdbms.user"),
+		Pass:   sys.String("rdbms.pass"),
+		Dbname: sys.String("rdbms.dbname"),
+		Prefix: sys.String("rdbms.prefix"),
 	}
 
+	slow := sys.Int("rdbms.slow")
+	if slow == 0 {
+		slow = 300
+	}
 	cf = &gorm.Config{
 		Logger: logger.New(log.New(os.Stdout, "\r\n", log.LstdFlags), logger.Config{
-			SlowThreshold:             300 * time.Millisecond,
+			SlowThreshold:             time.Duration(slow) * time.Millisecond,
 			LogLevel:                  logger.Warn,
 			Colorful:                  true,
 			IgnoreRecordNotFoundError: true,

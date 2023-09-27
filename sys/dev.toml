@@ -1,0 +1,29 @@
+[sys]
+port = 8080
+
+[log]
+path = 'log'
+file = 'out.log'
+max_num = 10
+max_age = 30
+max_size = 100
+
+[token]
+secret = 'secret'
+expires = 30
+
+[rdbms]
+kind = 'pgsql'
+host = '127.0.0.1'
+port = 5432
+user = 'postgres'
+pass = '123456'
+dbname = 'test'
+prefix = 'xxx_'
+
+[redis]
+addr = '127.0.0.1:6379'
+pass = ''
+index = 0
+nodes = '127.0.0.1:30001,127.0.0.1:30002,127.0.0.1:30003'
+nodes_pass = ''

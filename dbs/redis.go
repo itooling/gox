@@ -24,9 +24,9 @@ func Redis() redis.Cmdable {
 	}()
 
 	options := redis.Options{
-		Addr:         sys.String("app.dbs.redis.addr"),
-		Password:     sys.String("app.dbs.redis.pass"),
-		DB:           sys.Int("app.dbs.redis.index"),
+		Addr:         sys.String("redis.addr"),
+		Password:     sys.String("redis.pass"),
+		DB:           sys.Int("redis.index"),
 		DialTimeout:  time.Millisecond * 50,
 		ReadTimeout:  time.Millisecond * 50,
 		WriteTimeout: time.Millisecond * 50,
@@ -49,8 +49,8 @@ func RedisCluster() redis.Cmdable {
 	}()
 
 	options := redis.ClusterOptions{
-		Addrs:        strings.Split(sys.String("app.dbs.redis.nodes"), ","),
-		Password:     sys.String("app.dbs.redis.nodes_pass"),
+		Addrs:        strings.Split(sys.String("redis.nodes"), ","),
+		Password:     sys.String("redis.nodes_pass"),
 		DialTimeout:  time.Millisecond * 50,
 		ReadTimeout:  time.Millisecond * 50,
 		WriteTimeout: time.Millisecond * 50,

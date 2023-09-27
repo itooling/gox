@@ -12,9 +12,9 @@ import (
 	"testing"
 
 	"github.com/natefinch/lumberjack"
+	"github.com/pelletier/go-toml/v2"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
-	"gopkg.in/yaml.v3"
 )
 
 const (
@@ -49,6 +49,7 @@ func init() {
 		flag.Parse()
 	}
 
+	format := "toml"
 	config = viper.New()
 	config.AddConfigPath(dir)
 
@@ -57,12 +58,12 @@ func init() {
 		config.AddConfigPath(base)
 	}
 
-	cfn := env + ".yml"
+	cfn := env + "." + format
 	ncd := NewConfigDefault()
 	if _, err := os.Stat(cfn); !(err == nil || os.IsExist(err)) {
 		if cf, err := os.Create(cfn); err != nil {
 			log.Println(err)
-		} else if out, err := yaml.Marshal(ncd); err != nil {
+		} else if out, err := toml.Marshal(ncd); err != nil {
 			log.Println(err)
 		} else {
 			cf.Write(out)
@@ -70,7 +71,7 @@ func init() {
 	}
 
 	config.SetConfigName(cfn)
-	config.SetConfigType("yaml")
+	config.SetConfigType(format)
 	err := config.ReadInConfig()
 	if err != nil {
 		panic(err)
@@ -78,11 +79,11 @@ func init() {
 }
 
 func init() {
-	path = String("app.log.path")
-	file = String("app.log.file")
-	maxNum = Int("app.log.max_num")
-	maxAge = Int("app.log.max_age")
-	maxSize = Int("app.log.max_size")
+	path = String("log.path")
+	file = String("log.file")
+	maxNum = Int("log.max_num")
+	maxAge = Int("log.max_age")
+	maxSize = Int("log.max_size")
 
 	if path == "" {
 		path = "./log"

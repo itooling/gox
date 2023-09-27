@@ -20,18 +20,18 @@ const (
 
 var (
 	secret  string
-	expires time.Duration
+	expires int
 )
 
 func init() {
-	secret = "secret" //todo change secret
-	exp := sys.Int("app.jwt.expires")
-	if exp == 0 {
-		expires = time.Minute * time.Duration(30)
-	} else {
-		expires = time.Minute * time.Duration(exp)
+	secret = sys.String("token.secret")
+	if secret == "" {
+		secret = "secret"
 	}
-
+	expires = sys.Int("token.expires")
+	if expires == 0 {
+		expires = 30
+	}
 }
 
 type Header struct {
@@ -92,7 +92,7 @@ func Create(id string) string {
 		},
 		payload: Payload{
 			JwtId:     id,
-			ExpiresAt: time.Now().Add(expires).Unix(),
+			ExpiresAt: time.Now().Add(time.Duration(expires) * time.Minute).Unix(),
 		},
 	}
 	s.Sign(secret)
@@ -108,7 +108,7 @@ func Creates(id string, data map[string]any) string {
 		payload: Payload{
 			JwtId:     id,
 			Data:      data,
-			ExpiresAt: time.Now().Add(expires).Unix(),
+			ExpiresAt: time.Now().Add(time.Duration(expires) * time.Minute).Unix(),
 		},
 	}
 	s.Sign(secret)
